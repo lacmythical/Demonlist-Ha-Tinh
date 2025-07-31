@@ -4,11 +4,11 @@ Trang web chính thức của **Demonlist Hà Tĩnh** – bảng xếp hạng c�
 
 ## 📋 Tính năng
 - Giao diện nền đen đơn giản.
-- Thanh tiêu đề cố định: **HT Demonlist**.
+- Thanh tiêu đề cố định: **Demonlist Ha Tinh**.
 - Hiển thị video minh họa level, thứ hạng, tên level và tác giả.
 
 ## 🌐 Truy cập
-https://<tên-tài-khoản-GitHub>.github.io/ht-demonlist/
+https://demonlist-ha-tinh.web.app/index.html
 
 ---
 
