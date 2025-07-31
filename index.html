@@ -11,36 +11,66 @@
       background-color: #111;
       color: white;
     }
+
     .navbar {
+      background-color: #222;
       display: flex;
       justify-content: space-between;
+      padding: 12px 20px;
       align-items: center;
-      background-color: #222;
-      padding: 12px 24px;
+      border-bottom: 1px solid #333;
     }
-    .navbar-title {
-      font-size: 1.2em;
+
+    .navbar .title {
+      font-size: 20px;
       font-weight: bold;
     }
-    .navbar-links a {
-      margin-left: 20px;
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .navbar .nav-links button {
+      background-color: #555;
       color: white;
-      text-decoration: none;
+      border: 1px solid #777;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.2s, transform 0.2s;
     }
-    .content {
+
+    .navbar .nav-links button:hover {
+      background-color: #777;
+      transform: scale(1.05);
+    }
+
+    .container {
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
-    .level {
-      margin-bottom: 40px;
+
+    .level-box {
+      background-color: #1a1a1a;
+      border: 1px solid #555;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
     }
-    .video-container {
+
+    .video-wrapper {
       position: relative;
-      width: 100%;
       padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
+      border-radius: 8px;
     }
-    .video-container iframe {
+
+    .video-wrapper iframe {
       position: absolute;
       top: 0;
       left: 0;
@@ -48,41 +78,75 @@
       height: 100%;
       border: none;
     }
+
     .level-info {
-      margin-top: 10px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .level-info h2 {
-      margin: 0;
-      font-size: 1.4em;
+
+    .level-title {
+      font-size: 18px;
+      font-weight: bold;
     }
-    .level-info p {
-      margin: 4px 0 0;
-      color: #aaa;
+
+    .level-author {
+      font-size: 14px;
+      color: #bbb;
+    }
+
+    .points-box {
+      background-color: #222;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      white-space: nowrap;
     }
   </style>
 </head>
 <body>
-
   <div class="navbar">
-    <div class="navbar-title">Demonlist Ha Tinh</div>
-    <div class="navbar-links">
-      <a href="index.html">Demonlist</a>
-      <a href="leaderboard.html">Leaderboard</a>
+    <div class="title">Demonlist Ha Tinh</div>
+    <div class="nav-links">
+      <button onclick="window.location.href='index.html'">Demonlist</button>
+      <button onclick="window.location.href='leaderboard.html'">Leaderboard</button>
+      <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header', '_blank')">Submit</button>
     </div>
   </div>
 
-  <div class="content">
-    <div class="level">
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c?si=U-H60ZmsaUq9I-6f" 
-                title="YouTube video" allowfullscreen></iframe>
+  <div class="container">
+
+    <!-- Level 1 -->
+    <div class="level-box">
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c" allowfullscreen></iframe>
       </div>
       <div class="level-info">
-        <h2>Top 1 - Bloodbath</h2>
-        <p>by Riot</p>
+        <div>
+          <div class="level-title">#1 • Bloodbath</div>
+          <div class="level-author">by Riot</div>
+        </div>
+        <div class="points-box">5000 pts</div>
       </div>
     </div>
-  </div>
 
+    <!-- Level 2 -->
+    <div class="level-box">
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/r4XvQGm7cvA" allowfullscreen></iframe>
+      </div>
+      <div class="level-info">
+        <div>
+          <div class="level-title">#2 • The Golden</div>
+          <div class="level-author">by BoBoBoBoBoBo</div>
+        </div>
+        <div class="points-box">??? pts</div>
+      </div>
+    </div>
+
+  </div>
 </body>
 </html>
