@@ -1,158 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Demonlist Hà Tĩnh</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demonlist Ha Tinh</title>
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      background-color: #1e1e1e;
-    }
-
-    nav .title {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    nav .menu {
-      position: relative;
-    }
-
-    nav .menu-button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    nav .menu-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background-color: #2a2a2a;
-      border: 1px solid #444;
-      border-radius: 5px;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    nav .menu-content a {
-      display: block;
-      padding: 0.5rem 1rem;
-      color: white;
-      text-decoration: none;
-    }
-
-    nav .menu-content a:hover {
-      background-color: #444;
-    }
-
-    .level-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .level-box {
-      background-color: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 10px;
-      margin: 1rem;
-      padding: 1rem;
-      width: 300px;
-    }
-
-    .level-box iframe {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: none;
-    }
-
-    .level-title {
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    .level-author {
-      color: #aaa;
-      font-size: 0.9rem;
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <div class="title">Demonlist Hà Tĩnh</div>
-    <div class="menu">
-      <button class="menu-button" onclick="toggleMenu()">☰</button>
-      <div class="menu-content" id="menuContent">
-        <a href="#">Demonlist</a>
-        <a href="#">Leaderboard</a>
-        <a href="#" onclick="signIn()">Đăng nhập</a>
-        <a href="#" onclick="signOut()">Đăng xuất</a>
-      </div>
-    </div>
-  </nav>
-
-  <div class="level-container">
-    <div class="level-box">
-      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-      <div class="level-title">#1 Abomination</div>
-      <div class="level-author">by LacVN</div>
-    </div>
-    <!-- Add more levels here -->
-  </div>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw",
       authDomain: "demonlist-ha-tinh.firebaseapp.com",
       projectId: "demonlist-ha-tinh",
-      appId: "1:812055586785:web:your_app_part_here"
+      appId: "1:812055586785:web:0e4fc63f7d5ba89920d54d"
     };
     firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #222;
+      padding: 10px 20px;
+      position: relative;
+    }
+
+    .navbar-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .toggle-button {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .navbar-links {
+      display: none;
+      flex-direction: column;
+      background-color: #222;
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      min-width: 160px;
+    }
+
+    .navbar-links.active {
+      display: flex;
+    }
+
+    .navbar-links a,
+    .navbar-links button {
+      color: white;
+      text-decoration: none;
+      margin: 5px 0;
+      padding: 5px;
+      border: none;
+      border-radius: 3px;
+      background: none;
+      text-align: left;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .navbar-links a:hover,
+    .navbar-links button:hover {
+      background-color: #444;
+    }
+
+    .navbar-user {
+      font-size: 14px;
+      margin-top: 5px;
+      color: #aaa;
+    }
+
+    .level-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .level-box {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #555;
+    }
+
+    .level-rank {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .level-name {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .level-author {
+      color: #aaa;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .level-video iframe {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      border: none;
+    }
+
+    .level-points {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    @media (min-width: 600px) {
+      .navbar-links {
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="navbar-title">Demonlist Ha Tinh</div>
+    <button class="toggle-button">&#9776;</button>
+    <div class="navbar-links">
+      <a href="index.html">Demonlist</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
+      <button id="login-btn">Sign in with Google</button>
+      <button id="logout-btn" style="display: none;">Logout</button>
+      <div id="user-info" class="navbar-user"></div>
+    </div>
+  </div>
+
+  <div class="level-container">
+    <div class="level-box">
+      <div class="level-rank">#1</div>
+      <div class="level-name">Bloodbath</div>
+      <div class="level-author">by Riot</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">5000 pts</div>
+    </div>
+
+    <div class="level-box">
+      <div class="level-rank">#2</div>
+      <div class="level-name">Ballistic Funk</div>
+      <div class="level-author">by IronIngot</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/LQHF4MjIIS8" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4900 pts</div>
+    </div>
+
+    <div class="level-box">
+      <div class="level-rank">#3</div>
+      <div class="level-name">Phantasmagoria</div>
+      <div class="level-author">by whlt</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/ldK9BTzoA5M" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4800 pts</div>
+    </div>
+
+    <div class="level-box">
+      <div class="level-rank">#4</div>
+      <div class="level-name">Anya III</div>
+      <div class="level-author">by Anya21</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/xlftXgH2flk" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4700 pts</div>
+    </div>
+
+    <div class="level-box">
+      <div class="level-rank">#5</div>
+      <div class="level-name">Acu</div>
+      <div class="level-author">by Neigefeu</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/wbb384VsPAY" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4600 pts</div>
+    </div>
+  </div>
+
+  <script>
+    const toggleButton = document.querySelector('.toggle-button');
+    const navbarLinks = document.querySelector('.navbar-links');
+    toggleButton.addEventListener('click', () => {
+      navbarLinks.classList.toggle('active');
+    });
+
     const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
 
-    function toggleMenu() {
-      const menu = document.getElementById("menuContent");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
+    const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const userInfo = document.getElementById("user-info");
 
-    function signIn() {
-      const provider = new firebase.auth.GoogleAuthProvider();
+    loginBtn.onclick = () => {
       auth.signInWithPopup(provider)
-        .then(result => {
-          alert("Đăng nhập thành công: " + result.user.displayName);
+        .then((result) => {
+          const user = result.user;
+          userInfo.textContent = `Logged in as ${user.displayName}`;
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "inline-block";
         })
-        .catch(error => {
-          alert("Lỗi đăng nhập: " + error.message);
+        .catch((error) => {
+          alert("Login failed: " + error.message);
         });
-    }
+    };
 
-    function signOut() {
+    logoutBtn.onclick = () => {
       auth.signOut().then(() => {
-        alert("Đã đăng xuất.");
-      }).catch(error => {
-        alert("Lỗi đăng xuất: " + error.message);
+        userInfo.textContent = "";
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
       });
-    }
+    };
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        userInfo.textContent = `Logged in as ${user.displayName}`;
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+      }
+    });
   </script>
 </body>
 </html>
-
