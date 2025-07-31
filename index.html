@@ -16,8 +16,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
       background-color: #222;
+      padding: 10px 20px;
+      position: relative;
     }
 
     .navbar-title {
@@ -25,119 +26,142 @@
       font-weight: bold;
     }
 
-    .menu-icon {
-      font-size: 28px;
+    .toggle-button {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
       cursor: pointer;
-      user-select: none;
     }
 
-    .dropdown {
+    .navbar-links {
       display: none;
+      flex-direction: column;
+      background-color: #222;
       position: absolute;
       top: 60px;
-      right: 20px;
-      background-color: #333;
-      border: 1px solid #444;
+      right: 10px;
+      padding: 10px;
       border-radius: 5px;
-      overflow: hidden;
-      z-index: 999;
     }
 
-    .dropdown a {
-      display: block;
-      padding: 10px 15px;
+    .navbar-links.active {
+      display: flex;
+    }
+
+    .navbar-links a {
       color: white;
       text-decoration: none;
-      border-bottom: 1px solid #444;
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 3px;
     }
 
-    .dropdown a:hover {
-      background-color: #555;
+    .navbar-links a:hover {
+      background-color: #444;
     }
 
     .level-container {
-      max-width: 800px;
-      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       padding: 20px;
+    }
+
+    .level-box {
       background-color: #222;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      border: 1px solid #555;
     }
 
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%; /* 16:9 ratio */
-      margin-bottom: 15px;
+    .level-rank {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .level-name {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .level-author {
+      color: #aaa;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .level-video iframe {
       width: 100%;
-      height: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
       border: none;
     }
 
-    .level-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .level-text {
-      font-size: 18px;
-    }
-
-    .score-box {
-      background-color: white;
-      color: black;
-      padding: 5px 10px;
-      border-radius: 5px;
-      min-width: 70px;
-      text-align: center;
+    .level-points {
+      margin-top: 10px;
       font-weight: bold;
     }
-  </style>
 
-  <script>
-    function toggleDropdown() {
-      const menu = document.getElementById("dropdownMenu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-
-    window.onclick = function(e) {
-      const menu = document.getElementById("dropdownMenu");
-      if (!e.target.matches('.menu-icon')) {
-        menu.style.display = "none";
+    @media (min-width: 600px) {
+      .navbar-links {
+        right: 20px;
       }
     }
-  </script>
+  </style>
 </head>
 <body>
-  <!-- NAVBAR -->
   <div class="navbar">
     <div class="navbar-title">Demonlist Ha Tinh</div>
-    <div class="menu-icon" onclick="toggleDropdown()">☰</div>
-    <div class="dropdown" id="dropdownMenu">
+    <button class="toggle-button">&#9776;</button>
+    <div class="navbar-links">
       <a href="index.html">Demonlist</a>
       <a href="leaderboard.html">Leaderboard</a>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
     </div>
   </div>
 
-  <!-- LEVEL ENTRY -->
   <div class="level-container">
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/1xwVn1T9Q4A" allowfullscreen></iframe>
+    <div class="level-box">
+      <div class="level-rank">#1</div>
+      <div class="level-name">Bloodbath</div>
+      <div class="level-author">by Riot</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">5000 pts</div>
     </div>
-    <div class="level-info">
-      <div class="level-text">#1 Bloodbath by Riot</div>
-      <div class="score-box">5000 pt</div>
+
+    <div class="level-box">
+      <div class="level-rank">#2</div>
+      <div class="level-name">Ballistic Funk</div>
+      <div class="level-author">by IronIngot</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/LQHF4MjIIS8" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4900 pts</div>
+    </div>
+
+    <div class="level-box">
+      <div class="level-rank">#3</div>
+      <div class="level-name">Phantasmagoria</div>
+      <div class="level-author">by whlt</div>
+      <div class="level-video">
+        <iframe src="https://www.youtube.com/embed/ldK9BTzoA5M" allowfullscreen></iframe>
+      </div>
+      <div class="level-points">4800 pts</div>
     </div>
   </div>
 
+  <script>
+    const toggleButton = document.querySelector('.toggle-button');
+    const navbarLinks = document.querySelector('.navbar-links');
+
+    toggleButton.addEventListener('click', () => {
+      navbarLinks.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>
 
