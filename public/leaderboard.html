@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demonlist Ha Tinh - Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #222;
+      padding: 15px;
+    }
+
+    .navbar-title {
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 10px;
+      top: 60px;
+      background-color: #222;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .dropdown a:hover {
+      background-color: #333;
+    }
+
+    .leaderboard {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .player {
+      background-color: #1a1a1a;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .player span {
+      flex: 1;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .player-header {
+      background-color: #333;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="navbar-title">Demonlist Ha Tinh</div>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="index.html">Demonlist</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
+    </div>
+  </div>
+
+  <div class="leaderboard">
+    <div class="player player-header">
+      <span>Hạng</span>
+      <span>Nametag</span>
+      <span>Tên</span>
+      <span>Điểm</span>
+    </div>
+
+    <div class="player">
+      <span>#1</span>
+      <span>LacVN</span>
+      <span>Trần Mạnh Linh</span>
+      <span>14700</span>
+    </div>
+
+    <div class="player">
+      <span>#2</span>
+      <span>SkyPro</span>
+      <span>Nguyễn Văn A</span>
+      <span>8200</span>
+    </div>
+
+    <div class="player">
+      <span>#3</span>
+      <span>Zodiac</span>
+      <span>Hoàng B</span>
+      <span>4100</span>
+    </div>
+
+    <!-- Thêm player tại đây -->
+  </div>
+
+  <script>
+    function toggleMenu() {
+      var dropdown = document.getElementById("dropdownMenu");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.matches('.menu-icon')) {
+        document.getElementById("dropdownMenu").style.display = "none";
+      }
+    };
+  </script>
+
+</body>
+</html>
