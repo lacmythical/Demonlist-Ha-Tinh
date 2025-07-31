@@ -13,61 +13,62 @@
     }
 
     .navbar {
-      background-color: #222;
       display: flex;
       justify-content: space-between;
-      padding: 12px 20px;
       align-items: center;
-      border-bottom: 1px solid #333;
+      padding: 15px 20px;
+      background-color: #222;
     }
 
-    .navbar .title {
+    .navbar-title {
       font-size: 20px;
       font-weight: bold;
     }
 
-    .navbar .nav-links {
-      display: flex;
-      gap: 12px;
-    }
-
-    .navbar .nav-links button {
-      background-color: #555;
-      color: white;
-      border: 1px solid #777;
-      padding: 8px 16px;
-      font-size: 14px;
+    .menu-icon {
+      font-size: 28px;
       cursor: pointer;
-      border-radius: 6px;
-      transition: background-color 0.2s, transform 0.2s;
+      user-select: none;
     }
 
-    .navbar .nav-links button:hover {
-      background-color: #777;
-      transform: scale(1.05);
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: #333;
+      border: 1px solid #444;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 999;
     }
 
-    .container {
+    .dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+
+    .dropdown a:hover {
+      background-color: #555;
+    }
+
+    .level-container {
+      max-width: 800px;
+      margin: 20px auto;
       padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .level-box {
-      background-color: #1a1a1a;
-      border: 1px solid #555;
+      background-color: #222;
       border-radius: 10px;
-      padding: 16px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
     }
 
     .video-wrapper {
       position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 8px;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 ratio */
+      margin-bottom: 15px;
     }
 
     .video-wrapper iframe {
@@ -80,73 +81,63 @@
     }
 
     .level-info {
-      margin-top: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .level-title {
+    .level-text {
       font-size: 18px;
+    }
+
+    .score-box {
+      background-color: white;
+      color: black;
+      padding: 5px 10px;
+      border-radius: 5px;
+      min-width: 70px;
+      text-align: center;
       font-weight: bold;
     }
-
-    .level-author {
-      font-size: 14px;
-      color: #bbb;
-    }
-
-    .points-box {
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-      white-space: nowrap;
-    }
   </style>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    window.onclick = function(e) {
+      const menu = document.getElementById("dropdownMenu");
+      if (!e.target.matches('.menu-icon')) {
+        menu.style.display = "none";
+      }
+    }
+  </script>
 </head>
 <body>
+  <!-- NAVBAR -->
   <div class="navbar">
-    <div class="title">Demonlist Ha Tinh</div>
-    <div class="nav-links">
-      <button onclick="window.location.href='index.html'">Demonlist</button>
-      <button onclick="window.location.href='leaderboard.html'">Leaderboard</button>
-      <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header', '_blank')">Submit</button>
+    <div class="navbar-title">Demonlist Ha Tinh</div>
+    <div class="menu-icon" onclick="toggleDropdown()">☰</div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="index.html">Demonlist</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
     </div>
   </div>
 
-  <div class="container">
-
-    <!-- Level 1 -->
-    <div class="level-box">
-      <div class="video-wrapper">
-        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c" allowfullscreen></iframe>
-      </div>
-      <div class="level-info">
-        <div>
-          <div class="level-title">#1 • Bloodbath</div>
-          <div class="level-author">by Riot</div>
-        </div>
-        <div class="points-box">5000 pts</div>
-      </div>
+  <!-- LEVEL ENTRY -->
+  <div class="level-container">
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/1xwVn1T9Q4A" allowfullscreen></iframe>
     </div>
-
-    <!-- Level 2 -->
-    <div class="level-box">
-      <div class="video-wrapper">
-        <iframe src="https://www.youtube.com/embed/r4XvQGm7cvA" allowfullscreen></iframe>
-      </div>
-      <div class="level-info">
-        <div>
-          <div class="level-title">#2 • The Golden</div>
-          <div class="level-author">by BoBoBoBoBoBo</div>
-        </div>
-        <div class="points-box">??? pts</div>
-      </div>
+    <div class="level-info">
+      <div class="level-text">#1 Bloodbath by Riot</div>
+      <div class="score-box">5000 pt</div>
     </div>
-
   </div>
+
 </body>
 </html>
+
