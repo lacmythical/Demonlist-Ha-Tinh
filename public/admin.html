@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Thêm Level</title>
+  <style>
+    body {
+      background: #121212;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      background: #1f1f1f;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #2c2c2c;
+      color: white;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #00b894;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #019176;
+    }
+
+    .success {
+      color: #55efc4;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .error {
+      color: #ff7675;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .logout {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: #d63031;
+      padding: 8px 14px;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button class="logout" onclick="logout()">Đăng xuất</button>
+  <h2>Thêm Level vào Demonlist</h2>
+  <form id="level-form">
+    <label>ID Level (trong GD)</label>
+    <input type="number" id="id" required>
+
+    <label>Tên Level</label>
+    <input type="text" id="name" required>
+
+    <label>Tác giả</label>
+    <input type="text" id="creator" required>
+
+    <label>Điểm</label>
+    <input type="number" id="points" required>
+
+    <button type="submit">Thêm Level</button>
+
+    <div class="success" id="success-message"></div>
+    <div class="error" id="error-message"></div>
+  </form>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js'
+
+    const supabase = createClient(
+      'https://ydxpommceinqsiobidom.supabase.co',
+      'sb_publishable_ZJ4JzMkjn7Ve-Kc4f1WHrw_Ee7SDGwR'
+    )
+
+    const userSession = await supabase.auth.getSession()
+    if (!userSession.data.session) {
+      window.location.href = 'login.html'
+    }
+
+    const form = document.getElementById('level-form')
+    const success = document.getElementById('success-message')
+    const error = document.getElementById('error-message')
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      success.textContent = ''
+      error.textContent = ''
+
+      const id = document.getElementById('id').value
+      const name = document.getElementById('name').value
+      const creator = document.getElementById('creator').value
+      const points = document.getElementById('points').value
+
+      const { data, error: insertError } = await supabase
+        .from('levels')
+        .insert([{ id, name, creator, points }])
+
+      if (insertError) {
+        error.textContent = 'Lỗi: ' + insertError.message
+      } else {
+        success.textContent = 'Đã thêm thành công!'
+        form.reset()
+      }
+    })
+
+    async function logout() {
+      await supabase.auth.signOut()
+      window.location.href = 'login.html'
+    }
+  </script>
+</body>
+</html>
