@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Demonlist Ha Tinh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,14 +17,24 @@
       background-color: #222;
       display: flex;
       justify-content: space-between;
-      padding: 10px 20px;
       align-items: center;
+      padding: 10px 20px;
+      position: relative;
     }
 
     nav h1 {
       margin: 0;
       font-size: 24px;
       color: #FFD700;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
 
     nav ul {
@@ -79,12 +90,40 @@
     .level-box a:hover {
       text-decoration: underline;
     }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav ul {
+        flex-direction: column;
+        background-color: #222;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 200px;
+        display: none;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 10px 0;
+        text-align: right;
+        margin-right: 20px;
+      }
+    }
   </style>
 </head>
 <body>
   <nav>
     <h1>Demonlist Ha Tinh</h1>
-    <ul>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <ul id="navbar-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="leaderboard.html">Leaderboard</a></li>
     </ul>
@@ -96,17 +135,20 @@
   </div>
 
   <script>
+    function toggleMenu() {
+      const menu = document.getElementById("navbar-links");
+      menu.classList.toggle("show");
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw",
       authDomain: "demonlist-ha-tinh.firebaseapp.com",
       databaseURL: "https://demonlist-ha-tinh-default-rtdb.firebaseio.com",
       projectId: "demonlist-ha-tinh",
       storageBucket: "demonlist-ha-tinh.appspot.com",
-      messagingSenderId: "812055586785",
-      appId: "1:812055586785:web:your-app-id" // Không bắt buộc dùng
+      messagingSenderId: "812055586785"
     };
 
-    // Khởi tạo Firebase
     if (!firebase.apps?.length) {
       firebase.initializeApp(firebaseConfig);
     }
@@ -134,7 +176,6 @@
       });
   </script>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </body>
