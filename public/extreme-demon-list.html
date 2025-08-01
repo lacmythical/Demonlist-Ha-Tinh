@@ -2,24 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Extreme Demon List - Demonlist Ha Tinh</title>
+  <title>Extreme Demon List</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
-  <nav>
-    <h1>Demonlist Ha Tinh</h1>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="leaderboard.html">Leaderboard</a></li>
-    </ul>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Demonlist Ha Tinh</h1>
+    </div>
+    <div class="navbar-right">
+      <a href="index.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
   </nav>
 
-  <div class="container">
+  <div class="main-content">
     <h2>Extreme Demon List</h2>
-    <div id="level-list">
-      <!-- Level sẽ được thêm vào đây bằng JavaScript -->
+    <div id="level-list" class="level-container">
+      <!-- Các level sẽ được chèn tại đây -->
     </div>
   </div>
 
@@ -31,33 +33,38 @@
       projectId: "demonlist-ha-tinh",
       storageBucket: "demonlist-ha-tinh.appspot.com",
       messagingSenderId: "812055586785",
-      appId: "1:812055586785:web:xxxxxx"
+      appId: "1:812055586785:web:xxx"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const container = document.getElementById("level-list");
 
-    const levelListContainer = document.getElementById("level-list");
-
-    db.ref("extreme-demons").orderByChild("points").once("value").then(snapshot => {
+    db.ref("extreme-demons").once("value").then(snapshot => {
       const levels = [];
       snapshot.forEach(child => {
         levels.push({ id: child.key, ...child.val() });
       });
 
-      // Sắp xếp giảm dần theo điểm
-      levels.sort((a, b) => b.points - a.points);
+      levels.sort((a, b) => b.points - a.points); // sắp xếp giảm dần
 
       levels.forEach((level, index) => {
-        const div = document.createElement("div");
-        div.className = "section-box";
-        div.innerHTML = `
-          <h3>#${index + 1} - ${level.name}</h3>
+        const box = document.createElement("div");
+        box.className = "section-box";
+        box.innerHTML = `
+          <h3>#${index + 1}: ${level.name}</h3>
           <p><strong>Creator:</strong> ${level.creator}</p>
           <p><strong>Points:</strong> ${level.points}</p>
         `;
-        levelListContainer.appendChild(div);
+        container.appendChild(box);
       });
+
+      if (levels.length === 0) {
+        container.innerHTML = "<p>Hiện chưa có level nào.</p>";
+      }
+    }).catch(err => {
+      container.innerHTML = "<p>Lỗi khi tải dữ liệu.</p>";
+      console.error(err);
     });
   </script>
 </body>
