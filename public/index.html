@@ -1,252 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Demonlist Ha Tinh</title>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw",
-      authDomain: "demonlist-ha-tinh.firebaseapp.com",
-      projectId: "demonlist-ha-tinh",
-      appId: "1:812055586785:web:0e4fc63f7d5ba89920d54d"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
       background-color: #111;
-      color: white;
+      color: #fff;
+      margin: 0;
+      padding: 0;
     }
 
-    .navbar {
+    nav {
+      background-color: #222;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      background-color: #222;
       padding: 10px 20px;
-      position: relative;
+      align-items: center;
     }
 
-    .navbar-title {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .toggle-button {
+    nav h1 {
+      margin: 0;
       font-size: 24px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
+      color: #FFD700;
     }
 
-    .navbar-links {
-      display: none;
-      flex-direction: column;
-      background-color: #222;
-      position: absolute;
-      top: 60px;
-      right: 10px;
-      padding: 10px;
-      border-radius: 5px;
-      min-width: 160px;
-    }
-
-    .navbar-links.active {
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
     }
 
-    .navbar-links a,
-    .navbar-links button {
-      color: white;
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: #fff;
       text-decoration: none;
-      margin: 5px 0;
-      padding: 5px;
-      border: none;
-      border-radius: 3px;
-      background: none;
-      text-align: left;
-      font-size: 16px;
-      cursor: pointer;
+      font-weight: bold;
     }
 
-    .navbar-links a:hover,
-    .navbar-links button:hover {
-      background-color: #444;
-    }
-
-    .navbar-user {
-      font-size: 14px;
-      margin-top: 5px;
-      color: #aaa;
-    }
-
-    .level-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .container {
       padding: 20px;
     }
 
-    .level-box {
+    h2 {
+      color: #FFD700;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section-box {
       background-color: #222;
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid #555;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
     }
 
-    .level-rank {
-      font-size: 24px;
+    .section-box a {
+      color: #4db8ff;
+      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 10px;
+      text-decoration: none;
     }
 
-    .level-name {
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-
-    .level-author {
-      color: #aaa;
-      font-style: italic;
-      margin-bottom: 10px;
-    }
-
-    .level-video iframe {
-      width: 100%;
-      max-width: 560px;
-      aspect-ratio: 16 / 9;
-      border: none;
-    }
-
-    .level-points {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    @media (min-width: 600px) {
-      .navbar-links {
-        right: 20px;
-      }
+    .section-box a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="navbar-title">Demonlist Ha Tinh</div>
-    <button class="toggle-button">&#9776;</button>
-    <div class="navbar-links">
-      <a href="index.html">Demonlist</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
-      <button id="login-btn">Sign in with Google</button>
-      <button id="logout-btn" style="display: none;">Logout</button>
-      <div id="user-info" class="navbar-user"></div>
+  <nav>
+    <h1>Demonlist Ha Tinh</h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h2>Welcome!</h2>
+
+    <div class="section">
+      <div class="section-box">
+        <a href="extreme-demon-list.html">Extreme Demon List</a>
+        <p>Top-ranked extreme levels made by the community.</p>
+      </div>
+
+      <div class="section-box">
+        <a href="demonlist.html">Demon List</a>
+        <p>Other challenging levels worth checking out.</p>
+      </div>
     </div>
   </div>
-
-  <div class="level-container">
-    <div class="level-box">
-      <div class="level-rank">#1</div>
-      <div class="level-name">Bloodbath</div>
-      <div class="level-author">by Riot</div>
-      <div class="level-video">
-        <iframe src="https://www.youtube.com/embed/A6xe4tKdx_c" allowfullscreen></iframe>
-      </div>
-      <div class="level-points">5000 pts</div>
-    </div>
-
-    <div class="level-box">
-      <div class="level-rank">#2</div>
-      <div class="level-name">Ballistic Funk</div>
-      <div class="level-author">by IronIngot</div>
-      <div class="level-video">
-        <iframe src="https://www.youtube.com/embed/LQHF4MjIIS8" allowfullscreen></iframe>
-      </div>
-      <div class="level-points">4900 pts</div>
-    </div>
-
-    <div class="level-box">
-      <div class="level-rank">#3</div>
-      <div class="level-name">Phantasmagoria</div>
-      <div class="level-author">by whlt</div>
-      <div class="level-video">
-        <iframe src="https://www.youtube.com/embed/ldK9BTzoA5M" allowfullscreen></iframe>
-      </div>
-      <div class="level-points">4800 pts</div>
-    </div>
-
-    <div class="level-box">
-      <div class="level-rank">#4</div>
-      <div class="level-name">Anya III</div>
-      <div class="level-author">by Anya21</div>
-      <div class="level-video">
-        <iframe src="https://www.youtube.com/embed/xlftXgH2flk" allowfullscreen></iframe>
-      </div>
-      <div class="level-points">4700 pts</div>
-    </div>
-
-    <div class="level-box">
-      <div class="level-rank">#5</div>
-      <div class="level-name">Acu</div>
-      <div class="level-author">by Neigefeu</div>
-      <div class="level-video">
-        <iframe src="https://www.youtube.com/embed/wbb384VsPAY" allowfullscreen></iframe>
-      </div>
-      <div class="level-points">4600 pts</div>
-    </div>
-  </div>
-
-  <script>
-    const toggleButton = document.querySelector('.toggle-button');
-    const navbarLinks = document.querySelector('.navbar-links');
-    toggleButton.addEventListener('click', () => {
-      navbarLinks.classList.toggle('active');
-    });
-
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    const loginBtn = document.getElementById("login-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-    const userInfo = document.getElementById("user-info");
-
-    loginBtn.onclick = () => {
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          userInfo.textContent = `Logged in as ${user.displayName}`;
-          loginBtn.style.display = "none";
-          logoutBtn.style.display = "inline-block";
-        })
-        .catch((error) => {
-          alert("Login failed: " + error.message);
-        });
-    };
-
-    logoutBtn.onclick = () => {
-      auth.signOut().then(() => {
-        userInfo.textContent = "";
-        loginBtn.style.display = "inline-block";
-        logoutBtn.style.display = "none";
-      });
-    };
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        userInfo.textContent = `Logged in as ${user.displayName}`;
-        loginBtn.style.display = "none";
-        logoutBtn.style.display = "inline-block";
-      }
-    });
-  </script>
 </body>
 </html>
