@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Extreme Demon List</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      padding: 20px;
+    }
+    .level-box {
+      border: 1px solid #666;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #222;
+    }
+    .level-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #FFD700;
+    }
+    .rank {
+      font-size: 14px;
+      color: #ccc;
+    }
+    a {
+      color: #4db8ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Extreme Demon List</h1>
+  <div id="level-list">Loading levels...</div>
+
+  <script>
+    // ✅ Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw",
+      authDomain: "demonlist-ha-tinh.firebaseapp.com",
+      databaseURL: "https://demonlist-ha-tinh-default-rtdb.firebaseio.com",
+      projectId: "demonlist-ha-tinh",
+      storageBucket: "demonlist-ha-tinh.appspot.com",
+      messagingSenderId: "812055586785",
+      appId: "1:812055586785:web:randomvalue"
+    };
+
+    // ✅ Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // ✅ Fetch data from Firebase
+    database.ref('extreme-demon-list').once('value', (snapshot) => {
+      const levels = snapshot.val();
+      const sortedLevels = Object.values(levels || {}).sort((a, b) => a.rank - b.rank);
+
+      const levelListContainer = document.getElementById('level-list');
+      levelListContainer.innerHTML = '';
+
+      sortedLevels.forEach(level => {
+        levelListContainer.innerHTML += `
+          <div class="level-box">
+            <div class="level-title">#${level.rank} - ${level.name}</div>
+            <div>Creator: ${level.creator}</div>
+            <div>Points: ${level.points}</div>
+            <div><a href="${level.video}" target="_blank">Watch Video</a></div>
+          </div>
+        `;
+      });
+
+      if (sortedLevels.length === 0) {
+        levelListContainer.innerHTML = 'No levels available.';
+      }
+    });
+  </script>
+</body>
+</html>
