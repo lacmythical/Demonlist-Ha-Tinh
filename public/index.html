@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Demonlist Ha Tinh</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav>
-    <h1>Demonlist Ha Tinh</h1>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="leaderboard.html">Leaderboard</a></li>
-    </ul>
-  </nav>
-
-  <div class="container">
-    <h2>Welcome!</h2>
-
-    <div class="section">
-      <div class="section-box">
-        <a href="extreme-demon-list.html">Extreme Demon List</a>
-        <p>Top-ranked extreme levels made by the community.</p>
-      </div>
-
-      <div class="section-box">
-        <a href="demonlist.html">Demon List</a>
-        <p>Other challenging levels worth checking out.</p>
-      </div>
+  <div class="navbar">
+    <div class="navbar-title">Demonlist Ha Tinh</div>
+    <button class="toggle-button">&#9776;</button>
+    <div class="navbar-links">
+      <a href="index.html">Demonlist</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdSAzivIus5rOyNJ5TB-xhsASE4pa0lP2GQLUOdqjtyYgmprA/viewform?usp=header" target="_blank">Submit</a>
+      <button id="login-btn">Sign in with Google</button>
+      <button id="logout-btn" style="display: none;">Logout</button>
+      <div id="user-info" class="navbar-user"></div>
     </div>
   </div>
+
+  <div class="level-container" id="level-container">
+    <!-- Levels will be loaded here -->
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
