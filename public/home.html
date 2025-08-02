@@ -2,212 +2,131 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demonlist Ha Tinh - Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Rubik', sans-serif;
-      background: linear-gradient(to bottom right, #1e1e2f, #2c2c3c);
-      color: white;
+      background-color: #f4f4f4;
     }
 
     nav {
-      background-color: #111;
+      background-color: #333;
+      color: white;
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1em;
     }
 
-    .nav-title {
-      font-weight: bold;
-      font-size: 1.5em;
+    nav h1 {
+      margin: 0;
+      font-size: 1.2rem;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 1em;
-    }
-
-    .nav-links a {
+    nav a {
       color: white;
       text-decoration: none;
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-    }
-
-    .bar {
-      width: 25px;
-      height: 3px;
-      background-color: white;
-      margin: 4px 0;
-    }
-
-    @media (max-width: 600px) {
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #222;
-        position: absolute;
-        top: 60px;
-        left: 0;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .hamburger {
-        display: flex;
-      }
+      margin-left: 1rem;
     }
 
     .container {
-      max-width: 800px;
-      margin: 2em auto;
-      padding: 1em;
-      background-color: #2c2c3c;
-      border-radius: 8px;
+      padding: 2rem;
     }
 
-    h1, h2 {
+    h2 {
       text-align: center;
+      margin-bottom: 2rem;
     }
 
-    .level-box {
-      background-color: #444;
-      padding: 1em;
-      margin: 1em 0;
-      border-radius: 6px;
+    .level-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
     }
 
-    #add-level-section {
-      margin-top: 2em;
+    .level-item {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 320px;
     }
 
-    input {
+    .level-item h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    .level-item p {
+      margin: 0.3rem 0;
+    }
+
+    iframe {
+      margin-top: 0.5rem;
       width: 100%;
-      padding: 8px;
-      margin: 6px 0;
-      border: none;
-      border-radius: 4px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #4caf50;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #add-status {
-      margin-top: 10px;
-      color: #ffa;
+      height: 180px;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
+
   <nav>
-    <div class="nav-title">Demonlist Ha Tinh</div>
-    <div class="hamburger" onclick="toggleMenu()">
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-    <div class="nav-links" id="nav-links">
-      <a href="home.html">Home</a>
+    <h1>Demonlist Ha Tinh</h1>
+    <div>
+      <a href="index.html">Home</a>
       <a href="leaderboard.html">Leaderboard</a>
     </div>
   </nav>
 
   <div class="container">
-    <h1>Chào mừng trở lại!</h1>
-
-    <h2>Extreme Demon List</h2>
-    <div id="level-list">
-      <!-- Danh sách level sẽ được render tại đây -->
-    </div>
-
-    <!-- Khu vực thêm level (chỉ hiện với admin) -->
-    <div id="add-level-section">
-      <h2>Thêm level mới</h2>
-      <input type="text" id="level-name" placeholder="Tên level">
-      <input type="number" id="level-points" placeholder="Điểm">
-      <input type="text" id="level-video" placeholder="Link video">
-      <button onclick="addLevel()">Thêm</button>
-      <p id="add-status"></p>
+    <h2>Danh sách level mới nhất</h2>
+    <div id="level-list" class="level-container">
+      <!-- Các level sẽ được render tại đây -->
     </div>
   </div>
 
-  <script type="module">
-    const SUPABASE_URL = "https://demonlist-ha-tinh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbW9ubGlzdC1oYS10aW5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczNzIwMTUsImV4cCI6MjA0Mjk0ODAxNX0.SOVk2pqy3yrD_ZMPeIp9oF5HTyvdlnUuZt3e3tV0RrU";
-    const ADMIN_EMAILS = ['lacvn@example.com'];
+  <script>
+    const supabaseUrl = 'https://demonlist-ha-tinh.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo'
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey)
 
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    async function fetchLevels() {
+      const { data, error } = await supabase.from('levels').select('*')
 
-    const userEmail = localStorage.getItem('user_email');
-    const addSection = document.getElementById('add-level-section');
-
-    if (!ADMIN_EMAILS.includes(userEmail)) {
-      addSection.style.display = 'none';
-    }
-
-    async function loadLevels() {
-      const { data, error } = await supabase.from('levels').select('*').order('points', { ascending: false });
-      const list = document.getElementById('level-list');
-      if (data && data.length > 0) {
-        list.innerHTML = data.map(level => `
-          <div class="level-box">
-            <strong>${level.name}</strong> - ${level.points} điểm
-            <br>
-            <a href="${level.video}" target="_blank">Xem video</a>
-          </div>
-        `).join('');
-      } else {
-        list.innerHTML = '<p>Chưa có level nào.</p>';
-      }
-    }
-
-    loadLevels();
-
-    window.addLevel = async function () {
-      if (!ADMIN_EMAILS.includes(userEmail)) {
-        document.getElementById('add-status').textContent = 'Bạn không có quyền thêm level!';
-        return;
-      }
-
-      const name = document.getElementById('level-name').value;
-      const points = parseInt(document.getElementById('level-points').value);
-      const video = document.getElementById('level-video').value;
-
-      if (!name || !points || !video) {
-        document.getElementById('add-status').textContent = 'Vui lòng điền đầy đủ thông tin.';
-        return;
-      }
-
-      const { error } = await supabase.from('levels').insert([{ name, points, video }]);
       if (error) {
-        document.getElementById('add-status').textContent = 'Lỗi: ' + error.message;
-      } else {
-        document.getElementById('add-status').textContent = 'Thêm thành công!';
-        document.getElementById('level-name').value = '';
-        document.getElementById('level-points').value = '';
-        document.getElementById('level-video').value = '';
-        loadLevels();
+        console.error('Lỗi khi lấy levels:', error)
+        return
       }
-    };
 
-    window.toggleMenu = function () {
-      document.getElementById("nav-links").classList.toggle("show");
-    };
+      const levelList = document.getElementById('level-list')
+      levelList.innerHTML = ''
+
+      data.forEach(level => {
+        const div = document.createElement('div')
+        div.classList.add('level-item')
+
+        div.innerHTML = `
+          <h3>${level.name}</h3>
+          <p><strong>Creator:</strong> ${level.creator}</p>
+          <p><strong>Points:</strong> ${level.points}</p>
+          <iframe src="https://www.youtube.com/embed/${extractYouTubeId(level.video)}" allowfullscreen></iframe>
+        `
+        levelList.appendChild(div)
+      })
+    }
+
+    function extractYouTubeId(url) {
+      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      const match = url.match(regex)
+      return match ? match[1] : ''
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchLevels)
   </script>
 </body>
 </html>
