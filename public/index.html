@@ -88,7 +88,7 @@
     <div class="mb-3">
       <input type="password" id="password" class="form-control" placeholder="Mật khẩu" required />
     </div>
-    <button class="btn btn-primary w-100" onclick="login()">Đăng nhập</button>
+    <button id="login-button" class="btn btn-primary w-100">Đăng nhập</button>
     <p id="login-error" class="text-danger mt-2"></p>
   </div>
 
@@ -112,18 +112,29 @@
         document.getElementById("level-container").classList.remove("hidden");
         document.getElementById("logout-btn").classList.remove("hidden");
         loadLevels();
+      } else {
+        document.getElementById("login-form").classList.remove("hidden");
+        document.getElementById("level-container").classList.add("hidden");
+        document.getElementById("logout-btn").classList.add("hidden");
       }
     }
 
     async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorElem = document.getElementById("login-error");
+
+      if (!email || !password) {
+        errorElem.innerText = "Vui lòng nhập đầy đủ email và mật khẩu.";
+        return;
+      }
 
       const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        document.getElementById("login-error").innerText = "Sai thông tin đăng nhập.";
+        errorElem.innerText = "Đăng nhập thất bại: " + error.message;
       } else {
+        errorElem.innerText = "";
         checkSession();
       }
     }
@@ -133,6 +144,7 @@
       location.reload();
     }
 
+    document.getElementById("login-button").addEventListener("click", login);
     document.getElementById("logout-btn").addEventListener("click", logout);
 
     async function loadLevels() {
@@ -173,8 +185,7 @@
       return match ? match[1] : '';
     }
 
-    // Auto check on load
-    checkSession();
+    checkSession(); // Tự động kiểm tra khi trang load
   </script>
 </body>
 </html>
