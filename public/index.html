@@ -4,188 +4,97 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Demonlist Ha Tinh</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
       background-color: #121212;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    nav {
-      background-color: #1f1f1f;
-      padding: 1rem;
+    .navbar {
+      background-color: #1e1e1e;
     }
-    nav .nav-title {
-      font-size: 1.5rem;
+    .navbar-brand {
+      color: #00bfff;
       font-weight: bold;
-      color: white;
     }
-    .nav-links {
-      float: right;
-    }
-    .nav-links a {
+    .nav-link {
       color: white;
-      margin-left: 20px;
-      text-decoration: none;
     }
     .container {
-      margin-top: 2rem;
+      margin-top: 40px;
     }
     .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #ffffff33;
-      padding-bottom: 0.5rem;
+      color: #00bfff;
+      margin-bottom: 20px;
     }
     .level-box {
-      background-color: #1e1e1e;
       border: 1px solid #333;
-      padding: 1rem;
-      margin-bottom: 1rem;
       border-radius: 10px;
-    }
-    .level-box img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 5px;
-    }
-    .level-details {
-      margin-left: 1rem;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #1f1f1f;
     }
     .level-row {
       display: flex;
       align-items: center;
     }
-    .hidden {
-      display: none;
-    }
-    #login-form {
-      max-width: 400px;
-      margin: 50px auto;
-      background-color: #1f1f1f;
-      padding: 20px;
+    .level-row img {
+      width: 150px;
       border-radius: 10px;
+      margin-right: 20px;
+    }
+    .level-details h4 {
+      color: #00bfff;
+    }
+    .btn-primary {
+      background-color: #00bfff;
+      border: none;
     }
   </style>
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="d-flex justify-content-between">
-    <div class="nav-title">Demonlist Ha Tinh</div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="#" id="logout-btn" class="hidden">Đăng xuất</a>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Demonlist Ha Tinh</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Leaderboard</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 
-  <!-- Login form -->
-  <div id="login-form" class="container">
-    <h3>Đăng nhập</h3>
-    <div class="mb-3">
-      <input type="email" id="email" class="form-control" placeholder="Email" required />
-    </div>
-    <div class="mb-3">
-      <input type="password" id="password" class="form-control" placeholder="Mật khẩu" required />
-    </div>
-    <button id="login-button" class="btn btn-primary w-100">Đăng nhập</button>
-    <p id="login-error" class="text-danger mt-2"></p>
+  <!-- Login Form -->
+  <div class="container" id="login-form" style="display: none;">
+    <h2 class="section-title">Đăng nhập</h2>
+    <form onsubmit="handleLogin(event)">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <input type="password" class="form-control" id="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    </form>
   </div>
 
-  <!-- Level list -->
-  <div class="container hidden" id="level-container">
-    <h2 class="section-title">Danh sách Level (Auto từ Supabase)</h2>
-    <div id="level-list"></div>
+  <!-- Level List -->
+  <div class="container" id="level-list" style="display: none;">
+    <h2 class="section-title">Danh sách level</h2>
+    <!-- Các level sẽ được thêm tự động bằng JavaScript -->
   </div>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script>
-    const supabaseUrl = 'https://ydxpommceinqsiobidom.supabase.co';
-    const supabaseKey = 'sb_publishable_ZJ4JzMkjn7Ve-Kc4f1WHrw_Ee7SDGwR';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    async function checkSession() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        document.getElementById("login-form").classList.add("hidden");
-        document.getElementById("level-container").classList.remove("hidden");
-        document.getElementById("logout-btn").classList.remove("hidden");
-        loadLevels();
-      } else {
-        document.getElementById("login-form").classList.remove("hidden");
-        document.getElementById("level-container").classList.add("hidden");
-        document.getElementById("logout-btn").classList.add("hidden");
-      }
-    }
-
-    async function login() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorElem = document.getElementById("login-error");
-
-      if (!email || !password) {
-        errorElem.innerText = "Vui lòng nhập đầy đủ email và mật khẩu.";
-        return;
-      }
-
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        errorElem.innerText = "Đăng nhập thất bại: " + error.message;
-      } else {
-        errorElem.innerText = "";
-        checkSession();
-      }
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      location.reload();
-    }
-
-    document.getElementById("login-button").addEventListener("click", login);
-    document.getElementById("logout-btn").addEventListener("click", logout);
-
-    async function loadLevels() {
-      const { data, error } = await supabase
-        .from('levels')
-        .select('*')
-        .order('points', { ascending: false });
-
-      if (error) {
-        console.error(error);
-        document.getElementById("level-list").innerHTML = "<p>Lỗi tải dữ liệu.</p>";
-        return;
-      }
-
-      const container = document.getElementById('level-list');
-      container.innerHTML = '';
-      data.forEach(level => {
-        const videoId = extractYouTubeID(level.video);
-        const html = `
-          <div class="level-box">
-            <div class="level-row">
-              <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="${level.name}">
-              <div class="level-details">
-                <h4>${level.name}</h4>
-                <p><strong>Publisher:</strong> ${level.publisher}</p>
-                <p><strong>Điểm:</strong> ${level.points}</p>
-                <p><strong>Độ khó:</strong> ${level.difficulty}</p>
-              </div>
-            </div>
-          </div>`;
-        container.innerHTML += html;
-      });
-    }
-
-    function extractYouTubeID(url) {
-      const regex = /(?:youtube\.com.*(?:v=|\/embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-      const match = url.match(regex);
-      return match ? match[1] : '';
-    }
-
-    checkSession(); // Tự động kiểm tra khi trang load
-  </script>
+  <!-- Gắn script -->
+  <script src="auth.js"></script>
 </body>
 </html>
