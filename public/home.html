@@ -1,88 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Demonlist Ha Tinh - Home</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://ydxpommceinqsiobidom.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo";
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadLevels() {
+      const container = document.getElementById("level-list");
+      container.innerHTML = "<p>Đang tải dữ liệu...</p>";
+
+      const { data, error } = await supabase.from("levels").select("*").order("created_at", { ascending: false });
+
+      if (error) {
+        container.innerHTML = `<p style="color: red;">❌ Lỗi khi tải dữ liệu: ${error.message}</p>`;
+        return;
+      }
+
+      if (data.length === 0) {
+        container.innerHTML = "<p>Chưa có level nào được thêm!</p>";
+        return;
+      }
+
+      container.innerHTML = "";
+
+      data.forEach((level, index) => {
+        const embedLink = level.video?.includes("youtube.com") || level.video?.includes("youtu.be")
+          ? getYoutubeEmbedUrl(level.video)
+          : null;
+
+        container.innerHTML += `
+          <div class="level-box">
+            <h3>#${index + 1}: ${level.name}</h3>
+            <p><strong>Creator:</strong> ${level.creator}</p>
+            ${embedLink ? `<iframe width="300" height="180" src="${embedLink}" frameborder="0" allowfullscreen></iframe>` : ""}
+          </div>
+        `;
+      });
+    }
+
+    function getYoutubeEmbedUrl(link) {
+      const videoId = link.includes("watch?v=")
+        ? link.split("watch?v=")[1].split("&")[0]
+        : link.split("/").pop().split("?")[0];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    loadLevels();
+  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-      margin: 20px;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
     }
+
+    nav {
+      background: #222;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    nav .menu a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
     .level-box {
-      border: 1px solid #444;
+      background: #1a1a1a;
       padding: 15px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       border-radius: 8px;
-      background-color: #1e1e1e;
     }
-    .log {
-      background-color: #2a2a2a;
-      color: #ff4444;
-      padding: 10px;
-      margin-top: 20px;
-      white-space: pre-wrap;
+
+    iframe {
+      margin-top: 10px;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <h1>Demonlist Ha Tinh - Home</h1>
-  <div id="levels-container"></div>
-  <div class="log" id="log"></div>
+  <nav>
+    <h1>Demonlist Ha Tinh</h1>
+    <div class="menu">
+      <a href="home.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+  </nav>
 
-  <script>
-    const supabaseUrl = 'https://demonlist-ha-tinh.supabase.co'
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo'
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
-    const log = (msg) => {
-      document.getElementById('log').innerText += msg + '\n'
-    }
-
-    async function loadLevels() {
-      log('🔍 Đang tải level từ Supabase...')
-
-      const { data, error } = await supabase
-        .from('levels')
-        .select('*')
-        .order('points', { ascending: false })
-
-      if (error) {
-        log('❌ Lỗi khi tải dữ liệu: ' + error.message)
-        return
-      }
-
-      if (!data || data.length === 0) {
-        log('⚠️ Không có level nào được tìm thấy.')
-        return
-      }
-
-      log(`✅ Tải thành công ${data.length} level:`)
-
-      const container = document.getElementById('levels-container')
-      data.forEach(level => {
-        log(`- ${level.name} (${level.points} điểm)`)
-        const box = document.createElement('div')
-        box.className = 'level-box'
-        box.innerHTML = `
-          <h3>${level.name}</h3>
-          <p><strong>Creator:</strong> ${level.creator}</p>
-          <p><strong>Points:</strong> ${level.points}</p>
-          <p><strong>ID:</strong> ${level.id}</p>
-          ${level.video ? `<iframe width="320" height="180" src="https://www.youtube.com/embed/${extractYouTubeID(level.video)}" frameborder="0" allowfullscreen></iframe>` : ''}
-        `
-        container.appendChild(box)
-      })
-    }
-
-    function extractYouTubeID(url) {
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^\s&]+)/)
-      return match ? match[1] : ''
-    }
-
-    loadLevels()
-  </script>
+  <div class="container">
+    <h2>Danh sách level mới</h2>
+    <div id="level-list">
+      <!-- Levels sẽ được load ở đây -->
+    </div>
+  </div>
 </body>
 </html>
