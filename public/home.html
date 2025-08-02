@@ -3,58 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Demonlist Ha Tinh - Home</title>
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-    const supabaseUrl = "https://ydxpommceinqsiobidom.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo";
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    async function loadLevels() {
-      const container = document.getElementById("level-list");
-      container.innerHTML = "<p>Đang tải dữ liệu...</p>";
-
-      const { data, error } = await supabase.from("levels").select("*").order("created_at", { ascending: false });
-
-      if (error) {
-        container.innerHTML = `<p style="color: red;">❌ Lỗi khi tải dữ liệu: ${error.message}</p>`;
-        return;
-      }
-
-      if (data.length === 0) {
-        container.innerHTML = "<p>Chưa có level nào được thêm!</p>";
-        return;
-      }
-
-      container.innerHTML = "";
-
-      data.forEach((level, index) => {
-        const embedLink = level.video?.includes("youtube.com") || level.video?.includes("youtu.be")
-          ? getYoutubeEmbedUrl(level.video)
-          : null;
-
-        container.innerHTML += `
-          <div class="level-box">
-            <h3>#${index + 1}: ${level.name}</h3>
-            <p><strong>Creator:</strong> ${level.creator}</p>
-            ${embedLink ? `<iframe width="300" height="180" src="${embedLink}" frameborder="0" allowfullscreen></iframe>` : ""}
-          </div>
-        `;
-      });
-    }
-
-    function getYoutubeEmbedUrl(link) {
-      const videoId = link.includes("watch?v=")
-        ? link.split("watch?v=")[1].split("&")[0]
-        : link.split("/").pop().split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-
-    loadLevels();
-  </script>
+  <title>Demonlist Hà Tĩnh - Home</title>
+  <link rel="stylesheet" href="styles.css" /> <!-- Optional -->
   <style>
+    /* Styling đơn giản để dễ nhìn */
     body {
       font-family: Arial, sans-serif;
       background: #111;
@@ -62,57 +14,55 @@
       margin: 0;
       padding: 0;
     }
-
     nav {
       background: #222;
-      padding: 10px 20px;
+      padding: 1em;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
     nav h1 {
-      font-size: 20px;
       margin: 0;
+      font-size: 1.5em;
     }
-
-    nav .menu a {
+    nav a {
       color: #fff;
+      margin-left: 1em;
       text-decoration: none;
-      margin-left: 20px;
     }
-
-    .container {
-      padding: 20px;
+    main {
+      padding: 2em;
     }
-
     .level-box {
       background: #1a1a1a;
-      padding: 15px;
-      margin-bottom: 20px;
+      border: 1px solid #444;
+      padding: 1em;
+      margin-bottom: 1em;
       border-radius: 8px;
     }
-
-    iframe {
-      margin-top: 10px;
-      border-radius: 5px;
+    .level-box h3 {
+      margin-top: 0;
     }
   </style>
 </head>
 <body>
+
+  <!-- Thanh điều hướng -->
   <nav>
     <h1>Demonlist Ha Tinh</h1>
-    <div class="menu">
+    <div>
       <a href="home.html">Home</a>
       <a href="leaderboard.html">Leaderboard</a>
     </div>
   </nav>
 
-  <div class="container">
-    <h2>Danh sách level mới</h2>
-    <div id="level-list">
-      <!-- Levels sẽ được load ở đây -->
-    </div>
-  </div>
+  <!-- Phần nội dung chính -->
+  <main>
+    <h2>Extreme Demon List</h2>
+    <div id="level-list">Đang tải dữ liệu từ Supabase...</div>
+  </main>
+
+  <!-- Gắn file JavaScript -->
+  <script type="module" src="scripts/home.js"></script>
 </body>
 </html>
