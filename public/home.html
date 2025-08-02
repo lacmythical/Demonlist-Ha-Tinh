@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Demonlist Ha Tinh</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Demonlist Ha Tinh</div>
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="container">
+    <h2>Xin chào!</h2>
+    
+    <h3><a href="extreme-demon-list.html">Extreme Demon List</a></h3>
+    <div id="extreme-demon-list" class="level-list"></div>
+  </div>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://demonlist-ha-tinh-default-rtdb.firebaseio.com',
+      'AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw'
+    );
+
+    // Kiểm tra trạng thái đăng nhập
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Load dữ liệu từ Firebase nếu có (nếu dùng Supabase cho auth, nhưng Firebase cho dữ liệu)
+    // Ở đây bạn có thể fetch level list như đã làm trước
+  </script>
+</body>
+</html>
