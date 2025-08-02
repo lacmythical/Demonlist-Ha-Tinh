@@ -1,123 +1,96 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Demonlist Ha Tinh</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body {
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
-    nav {
-      background-color: #1f1f1f;
-      padding: 1rem;
-    }
-    nav .nav-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-    }
-    .nav-links {
-      float: right;
-    }
-    .nav-links a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-    }
-    .container {
-      margin-top: 2rem;
-    }
-    .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #ffffff33;
-      padding-bottom: 0.5rem;
-    }
-    .level-box {
-      background-color: #1e1e1e;
-      border: 1px solid #333;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-    }
-    .level-box img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 5px;
-    }
-    .level-details {
-      margin-left: 1rem;
-    }
-    .level-row {
-      display: flex;
-      align-items: center;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #login-form, #logout-button { margin-top: 20px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="d-flex justify-content-between">
-    <div class="nav-title">Demonlist Ha Tinh</div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-    </div>
-  </nav>
+  <h1>Demonlist Ha Tinh</h1>
 
-  <div class="container">
-    <h2 class="section-title">Danh sách Level (Auto từ Supabase)</h2>
-    <div id="level-list"></div>
+  <!-- Trạng thái đăng nhập -->
+  <div id="user-status"></div>
+
+  <!-- Form đăng nhập -->
+  <div id="login-form">
+    <h3>Đăng nhập</h3>
+    <input type="email" id="email" placeholder="Email" /><br/><br/>
+    <input type="password" id="password" placeholder="Password" /><br/><br/>
+    <button id="login-button">Đăng nhập</button>
+    <button id="signup-button">Đăng ký</button>
   </div>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Nút đăng xuất -->
+  <button id="logout-button" class="hidden">Đăng xuất</button>
+
+  <!-- Danh sách level -->
+  <div id="levels"></div>
+
   <script>
-    const supabaseUrl = 'https://ydxpommceinqsiobidom.supabase.co';
-    const supabaseKey = 'sb_publishable_ZJ4JzMkjn7Ve-Kc4f1WHrw_Ee7SDGwR';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabase = supabase.createClient(
+      'https://ydxpommceinqsiobidom.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo'
+    );
+
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-button');
+    const userStatus = document.getElementById('user-status');
+    const levelsDiv = document.getElementById('levels');
+
+    async function checkLogin() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        userStatus.textContent = `Đã đăng nhập: ${user.email}`;
+        loginForm.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        loadLevels();
+      } else {
+        userStatus.textContent = 'Chưa đăng nhập';
+        loginForm.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
+        levelsDiv.innerHTML = '';
+      }
+    }
 
     async function loadLevels() {
-      const { data, error } = await supabase
-        .from('levels')
-        .select('*')
-        .order('points', { ascending: false });
-
+      const { data, error } = await supabase.from('levels').select('*');
       if (error) {
-        console.error(error);
-        document.getElementById("level-list").innerHTML = "<p>Lỗi tải dữ liệu.</p>";
-        return;
+        levelsDiv.textContent = 'Lỗi khi tải danh sách.';
+      } else {
+        levelsDiv.innerHTML = '<h3>Danh sách Level</h3>' + data.map(lv =>
+          `<div><strong>${lv.name}</strong> - ${lv.difficulty}</div>`
+        ).join('');
       }
-
-      const container = document.getElementById('level-list');
-      data.forEach(level => {
-        const videoId = extractYouTubeID(level.video);
-        const html = `
-          <div class="level-box">
-            <div class="level-row">
-              <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="${level.name}">
-              <div class="level-details">
-                <h4>${level.name}</h4>
-                <p><strong>Publisher:</strong> ${level.publisher}</p>
-                <p><strong>Điểm:</strong> ${level.points}</p>
-                <p><strong>Độ khó:</strong> ${level.difficulty}</p>
-              </div>
-            </div>
-          </div>`;
-        container.innerHTML += html;
-      });
     }
 
-    function extractYouTubeID(url) {
-      const regex = /(?:youtube\.com.*(?:v=|\/embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-      const match = url.match(regex);
-      return match ? match[1] : '';
-    }
+    document.getElementById('login-button').onclick = async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert('Sai email hoặc mật khẩu!');
+      checkLogin();
+    };
 
-    loadLevels();
+    document.getElementById('signup-button').onclick = async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) alert('Không thể đăng ký!');
+      else alert('Đăng ký thành công, kiểm tra email để xác minh.');
+    };
+
+    logoutBtn.onclick = async () => {
+      await supabase.auth.signOut();
+      checkLogin();
+    };
+
+    checkLogin();
   </script>
 </body>
 </html>
