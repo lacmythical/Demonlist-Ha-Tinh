@@ -1,44 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Demonlist Ha Tinh</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demonlist Hà Tĩnh - Home</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: white;
+    }
+
+    header {
+      background-color: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #1e90ff;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: white;
+      margin: 4px 0;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #111;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    .container {
+      padding: 30px 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .level-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .level-box {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .level-box h3 {
+      margin: 0 0 10px;
+    }
+
+    .level-box p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #ccc;
+    }
+  </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">Demonlist Ha Tinh</div>
-    <div class="nav-links">
-      <a href="home.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-    </div>
-  </nav>
+  <header>
+    <h1>Demonlist Ha Tinh</h1>
+    <nav>
+      <div class="nav-links" id="navLinks">
+        <a href="home.html">Home</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="extreme-demon-list.html">Extreme Demon List</a>
+        <a href="index.html">Logout</a>
+      </div>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+  </header>
 
-  <!-- Main content -->
   <div class="container">
-    <h2>Xin chào!</h2>
-    
-    <h3><a href="extreme-demon-list.html">Extreme Demon List</a></h3>
-    <div id="extreme-demon-list" class="level-list"></div>
+    <h2>Danh sách level</h2>
+    <div class="level-list" id="level-list">
+      <!-- Dữ liệu level sẽ được chèn vào đây -->
+    </div>
   </div>
 
   <script>
-    const supabase = supabase.createClient(
-      'https://demonlist-ha-tinh-default-rtdb.firebaseio.com',
-      'AIzaSyBgk3wQyXTkhDALB5YXs3kwtN63Nntm1Iw'
-    );
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('show');
+    }
 
-    // Kiểm tra trạng thái đăng nhập
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        window.location.href = 'login.html';
+    const supabaseUrl = 'https://ydxpommceinqsiobidom.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function loadLevels() {
+      const { data, error } = await supabase
+        .from('levels')
+        .select('*')
+        .order('points', { ascending: false });
+
+      const list = document.getElementById('level-list');
+
+      if (error) {
+        list.innerHTML = '<p>Lỗi khi tải dữ liệu: ' + error.message + '</p>';
+        return;
       }
-    });
 
-    // Load dữ liệu từ Firebase nếu có (nếu dùng Supabase cho auth, nhưng Firebase cho dữ liệu)
-    // Ở đây bạn có thể fetch level list như đã làm trước
+      if (data.length === 0) {
+        list.innerHTML = '<p>Chưa có level nào được thêm.</p>';
+        return;
+      }
+
+      data.forEach(level => {
+        const box = document.createElement('div');
+        box.className = 'level-box';
+        box.innerHTML = `
+          <h3>${level.name}</h3>
+          <p><strong>Creator:</strong> ${level.creator}</p>
+          <p><strong>ID:</strong> ${level.id}</p>
+          <p><strong>Điểm:</strong> ${level.points}</p>
+        `;
+        list.appendChild(box);
+      });
+    }
+
+    loadLevels();
   </script>
 </body>
 </html>
