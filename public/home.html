@@ -1,132 +1,88 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demonlist Ha Tinh - Home</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f4f4f4;
-    }
-
-    nav {
-      background-color: #333;
+      background-color: #121212;
       color: white;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      margin: 20px;
     }
-
-    nav h1 {
-      margin: 0;
-      font-size: 1.2rem;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1rem;
-    }
-
-    .container {
-      padding: 2rem;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .level-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-
-    .level-item {
-      background-color: white;
-      padding: 1rem;
+    .level-box {
+      border: 1px solid #444;
+      padding: 15px;
+      margin-bottom: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      width: 320px;
+      background-color: #1e1e1e;
     }
-
-    .level-item h3 {
-      margin-top: 0;
-      font-size: 1.2rem;
-    }
-
-    .level-item p {
-      margin: 0.3rem 0;
-    }
-
-    iframe {
-      margin-top: 0.5rem;
-      width: 100%;
-      height: 180px;
-      border-radius: 6px;
+    .log {
+      background-color: #2a2a2a;
+      color: #ff4444;
+      padding: 10px;
+      margin-top: 20px;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-
-  <nav>
-    <h1>Demonlist Ha Tinh</h1>
-    <div>
-      <a href="index.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-    </div>
-  </nav>
-
-  <div class="container">
-    <h2>Danh sách level mới nhất</h2>
-    <div id="level-list" class="level-container">
-      <!-- Các level sẽ được render tại đây -->
-    </div>
-  </div>
+  <h1>Demonlist Ha Tinh - Home</h1>
+  <div id="levels-container"></div>
+  <div class="log" id="log"></div>
 
   <script>
     const supabaseUrl = 'https://demonlist-ha-tinh.supabase.co'
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo'
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-    async function fetchLevels() {
-      const { data, error } = await supabase.from('levels').select('*')
+    const log = (msg) => {
+      document.getElementById('log').innerText += msg + '\n'
+    }
+
+    async function loadLevels() {
+      log('🔍 Đang tải level từ Supabase...')
+
+      const { data, error } = await supabase
+        .from('levels')
+        .select('*')
+        .order('points', { ascending: false })
 
       if (error) {
-        console.error('Lỗi khi lấy levels:', error)
+        log('❌ Lỗi khi tải dữ liệu: ' + error.message)
         return
       }
 
-      const levelList = document.getElementById('level-list')
-      levelList.innerHTML = ''
+      if (!data || data.length === 0) {
+        log('⚠️ Không có level nào được tìm thấy.')
+        return
+      }
 
+      log(`✅ Tải thành công ${data.length} level:`)
+
+      const container = document.getElementById('levels-container')
       data.forEach(level => {
-        const div = document.createElement('div')
-        div.classList.add('level-item')
-
-        div.innerHTML = `
+        log(`- ${level.name} (${level.points} điểm)`)
+        const box = document.createElement('div')
+        box.className = 'level-box'
+        box.innerHTML = `
           <h3>${level.name}</h3>
           <p><strong>Creator:</strong> ${level.creator}</p>
           <p><strong>Points:</strong> ${level.points}</p>
-          <iframe src="https://www.youtube.com/embed/${extractYouTubeId(level.video)}" allowfullscreen></iframe>
+          <p><strong>ID:</strong> ${level.id}</p>
+          ${level.video ? `<iframe width="320" height="180" src="https://www.youtube.com/embed/${extractYouTubeID(level.video)}" frameborder="0" allowfullscreen></iframe>` : ''}
         `
-        levelList.appendChild(div)
+        container.appendChild(box)
       })
     }
 
-    function extractYouTubeId(url) {
-      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-      const match = url.match(regex)
+    function extractYouTubeID(url) {
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^\s&]+)/)
       return match ? match[1] : ''
     }
 
-    document.addEventListener('DOMContentLoaded', fetchLevels)
+    loadLevels()
   </script>
 </body>
 </html>
