@@ -1,77 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Đăng nhập</title>
+  <meta charset="UTF-8" />
+  <title>Demonlist Ha Tinh - Đăng nhập</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <style>
-    body {
-      background-color: #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h2 {
-      margin-bottom: 20px;
-    }
-    form {
-      background-color: #111;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-    input {
-      display: block;
-      width: 300px;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #444;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #666;
-    }
-    #status {
-      margin-top: 15px;
-      color: red;
-    }
-  </style>
 </head>
 <body>
-  <form id="login-form">
-    <h2>Đăng nhập</h2>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Mật khẩu" required>
-    <button type="submit">Đăng nhập</button>
-    <div id="status"></div>
-  </form>
+  <nav>
+    <h1>Demonlist Ha Tinh</h1>
+  </nav>
+
+  <div id="login-container" class="login-container">
+    <h2>Đăng nhập để tiếp tục</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Mật khẩu" />
+    <button id="login-btn">Đăng nhập</button>
+    <p id="error" style="color: red;"></p>
+  </div>
 
   <script>
-    const supabaseUrl = 'https://ydxpommceinqsiobidom.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkeHBvbW1jZWlucXNpb2JpZG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTA3NzMsImV4cCI6MjA2OTYyNjc3M30.MxkN3YMrEl-sZGQ7FZgUnF-Cid-s027vT660dMyzTNo';
+    const supabase = supabase.createClient(
+      'https://your-project-id.supabase.co', // Thay đúng
+      'your-anon-key' // Thay đúng
+    );
 
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        window.location.href = "home.html";
+      }
+    }
 
-    const loginForm = document.getElementById('login-form');
-    const statusDiv = document.getElementById('status');
+    checkSession();
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    document.getElementById('login-btn').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
@@ -81,12 +44,9 @@
       });
 
       if (error) {
-        statusDiv.textContent = 'Đăng nhập thất bại: ' + error.message;
+        document.getElementById('error').innerText = "Sai tài khoản hoặc mật khẩu.";
       } else {
-        statusDiv.style.color = 'lime';
-        statusDiv.textContent = 'Đăng nhập thành công!';
-        // Ví dụ chuyển trang hoặc lưu trạng thái:
-        // window.location.href = 'trangchu.html';
+        window.location.href = "home.html";
       }
     });
   </script>
